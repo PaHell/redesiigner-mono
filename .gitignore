@@ -1,0 +1,26 @@
+
+# IDE generated files #
+######################
+.vscode/
+
+# OS generated files  #
+#######################
+.DS_Store
+.DS_Store?
+
+# Volumes             #
+#######################
+mongodb/data/
+mongodb/logs/
+
+# Logs #
+######################
+*.log
+
+# SENSITVE DATA #
+.gitconfig
+.env
+cert/
+
+# BUILD #
+./gin-boilerplate
