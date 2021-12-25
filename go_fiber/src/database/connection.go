@@ -12,11 +12,13 @@ import (
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
     "go.mongodb.org/mongo-driver/mongo/readpref"
+    "github.com/go-redis/redis"
 )
 
-var instance *mongo.Client
+var instanceMongo *mongo.Client
+var instanceRedis *redis.Client
 
-func Connect(envVar string) (*mongo.Client, context.Context, context.CancelFunc, *error) {
+func ConnectMongo(envVar string) (*mongo.Client, context.Context, context.CancelFunc, *error) {
 	// get environment var
 	connectStr := os.Getenv(envVar)
 	if len(connectStr) == 0 {
@@ -24,10 +26,11 @@ func Connect(envVar string) (*mongo.Client, context.Context, context.CancelFunc,
 		return nil, nil, nil, &err
 	}
 	// create client
-	log.Println(fmt.Sprintf("Connecting to db via: %s", connectStr))
-	client, err := mongo.NewClient(options.Client().ApplyURI(connectStr))
+	log.Println(fmt.Sprintf("Connecting to mongodb via: %s", connectStr))
+	instanceMongo, err := mongo.NewClient(options.Client().ApplyURI(connectStr))
 	if err != nil {
 		log.Fatal(err)
+		return nil, nil, nil, &err
 	}
 	
 	// connection timeout
@@ -35,43 +38,42 @@ func Connect(envVar string) (*mongo.Client, context.Context, context.CancelFunc,
 	defer cancel()
 
 	// connect
-	err = client.Connect(ctx)
+	err = instanceMongo.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
+		return nil, nil, nil, &err
 	}
 
 	// test connection
-	err = client.Ping(ctx, readpref.Primary())
+	err = instanceMongo.Ping(ctx, readpref.Primary())
 	if err != nil {
 		log.Fatal(err)
+		return nil, nil, nil, &err
 	}
 
-	log.Println("Successfully connected to db.")
-
-	instance = client
-	return client, ctx, cancel, &err
+	log.Println("Successfully connected to mongodb")
+	return instanceMongo, ctx, cancel, &err
 }
 
-/*
-
-//GetDB ...
-func GetDB() *gorp.DbMap {
-	return db
-}
-
-//RedisClient ...
-var RedisClient *_redis.Client
-
-//InitRedis ...
-func InitRedis(selectDB ...int) {
-
-	var redisHost = os.Getenv("REDIS_HOST")
-	var redisPassword = os.Getenv("REDIS_PASSWORD")
-
-	RedisClient = _redis.NewClient(&_redis.Options{
-		Addr:     redisHost,
-		Password: redisPassword,
-		DB:       selectDB[0],
+func ConnectRedis(envVar string) (*redis.Client, context.Context, context.CancelFunc, *error) {
+	// get environment var
+	address := os.Getenv(envVar)
+	log.Print(address);
+	if len(address) == 0 {
+		err := errors.New(fmt.Sprintf("No %s defined in environment", envVar))
+		return nil, nil, nil, &err
+	}
+	
+	// connection timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
+	// create client
+	log.Println(fmt.Sprintf("Connecting to redis via: %s", address))
+	instanceRedis = redis.NewClient(&redis.Options{
+		Addr:     address,
+		Password: "",
+		DB:       0,
 		// DialTimeout:        10 * time.Second,
 		// ReadTimeout:        30 * time.Second,
 		// WriteTimeout:       30 * time.Second,
@@ -84,11 +86,14 @@ func InitRedis(selectDB ...int) {
 		// },
 	})
 
+	// test connection
+	pong, err := instanceRedis.Ping().Result()
+	if err != nil {
+		log.Fatal(err)
+		return nil, nil, nil, &err
+	}
+	if pong == "PONG" {
+		log.Print("Successfully connected to redis")
+	}
+	return instanceRedis, ctx, cancel, nil;
 }
-
-//GetRedis ...
-func GetRedis() *_redis.Client {
-	return RedisClient
-}
-
-*/

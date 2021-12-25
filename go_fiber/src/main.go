@@ -12,13 +12,15 @@ func main() {
     // create framework instance
     app := fiber.New()
 
-    // establish db connection
-    client, ctx, cancel, err := database.Connect("MONGODB_CONNECTION_STRING");
-    if (*err != nil) {
-        log.Fatal(*err);
-    }
-    log.Print(client, ctx, cancel, *err);
-
+    // establish db connections
+    mongoClient, ctx, cancel, err := database.ConnectMongo("MONGODB_CONNECTION_STRING");
+    defer cancel()
+    log.Print(mongoClient, ctx, cancel, err)
+    
+    redisClient, ctx, cancel, err := database.ConnectRedis("REDIS_CONNECTION_STRING");
+    defer cancel()
+    log.Print(redisClient, ctx, cancel, err)
+    
     // routes
     app.Get("/", func (c *fiber.Ctx) error {
         return c.SendString("Hello, World!")

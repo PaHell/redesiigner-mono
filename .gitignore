@@ -2,6 +2,7 @@
 # IDE generated files #
 ######################
 .vscode/
+.vs/
 
 # OS generated files  #
 #######################
@@ -12,10 +13,12 @@
 #######################
 mongodb/data/
 mongodb/logs/
+mysql/data/
 
 # Logs #
 ######################
 *.log
+npm-debug.log
 
 # SENSITVE DATA #
 .gitconfig
