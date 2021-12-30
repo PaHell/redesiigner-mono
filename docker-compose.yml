@@ -95,20 +95,20 @@ services:
     restart: always
 
   api_go_fiber:
-    depends_on:
-      - db_mongo
-      - db_redis
+    #depends_on:
+      #- db_mongo
+      #- db_redis
     container_name: api_go_fiber
     build: ./go_fiber
-    environment:
-      - MONGODB_CONNECTION_STRING=mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@db_mongo:${MONGO_PORT}
-      - REDIS_CONNECTION_STRING=db_redis:${REDIS_PORT}
+    #environment:
+      #- MONGODB_CONNECTION_STRING=mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@db_mongo:${MONGO_PORT}
+      #- REDIS_CONNECTION_STRING=db_redis:${REDIS_PORT}
     ports:
       - ${GO_FIBER_PORT}:3000
-    networks:
-      - mongo
-      - redis
-      - mysql
+    #networks:
+      #- mongo
+      #- redis
+      #- mysql
     restart: always
 
   app_svelte_loldraft:

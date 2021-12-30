@@ -2,30 +2,45 @@ package main
 
 import (
 	"log"
-    "github.com/PaHell/redesiigner-mono/database"
 
-    "github.com/gofiber/fiber/v2"
-	_ "github.com/Kamva/mgm/v2"
+	"github.com/PaHell/redesiigner-mono/database"
+	"github.com/PaHell/redesiigner-mono/models"
+	"github.com/PaHell/redesiigner-mono/routes"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-    // create framework instance
-    app := fiber.New()
 
-    // establish db connections
-    mongoClient, ctx, cancel, err := database.ConnectMongo("MONGODB_CONNECTION_STRING");
-    defer cancel()
-    log.Print(mongoClient, ctx, cancel, err)
-    
-    redisClient, ctx, cancel, err := database.ConnectRedis("REDIS_CONNECTION_STRING");
-    defer cancel()
-    log.Print(redisClient, ctx, cancel, err)
-    
-    // routes
-    app.Get("/", func (c *fiber.Ctx) error {
-        return c.SendString("Hello, World!")
-    })
+	// FRAMEWORK
+	app := fiber.New()
 
-    // entrypoint
-    log.Fatal(app.Listen(":3000"))
+	// DATABASE
+	/* other clients:
+	   mongoClient, ctx, cancel, err := database.ConnectMongo("MONGODB_CONNECTION_STRING");
+	   defer cancel()
+	   redisClient, ctx, cancel, err := database.ConnectRedis("REDIS_CONNECTION_STRING");
+	   defer cancel()
+	*/
+	err := database.ConnectSQLite("app.db")
+	if err != nil {
+		log.Fatal("Could not connect to database")
+		return
+	}
+	if database.InstanceGorm == nil {
+		panic("No database instance")
+	}
+
+	// MIGRATIONS
+	database.InstanceGorm.AutoMigrate(&models.User{})
+	database.InstanceGorm.AutoMigrate(&models.Application{})
+	log.Print("Database migrated")
+
+	// ROUTES
+	routes.SetupRoutes(app)
+	log.Print("Routes configured")
+
+	// START
+	log.Fatal(app.Listen(":3000"))
+
 }

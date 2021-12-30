@@ -1,28 +1,141 @@
 package controllers
 
 import (
-	"github.com/Massad/gin-boilerplate/forms"
-	"github.com/Massad/gin-boilerplate/models"
-
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"github.com/PaHell/redesiigner-mono/models"
 )
 
 //UserController ...
 type UserController struct{}
 
 var userModel = new(models.UserModel)
-var userForm = new(forms.UserForm)
 
-//getUserID ...
-func getUserID(c *gin.Context) (userID int64) {
-	//MustGet returns the value for the given key if it exists, otherwise it panics.
-	return c.MustGet("userID").(int64)
+/*
+func (ctrl UserController) ReadAll(c *fiber.Ctx) error {
+	users, err := userModel.All()
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// return items
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    users,
+	})
 }
 
+func (ctrl UserController) ReadOne(c *fiber.Ctx) error {
+	// parse id
+	id, err := util.ParseID(c.Params("ID"))
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// get item
+	user, err := userModel.One(uint(id))
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// return item
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    user,
+	})
+}
+
+func (ctrl UserController) Register(c *fiber.Ctx) error {
+	// parse input
+	parsed := new(models.User)
+	if err := c.BodyParser(parsed); err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// perform creation
+	created, err := userModel.Create(parsed)
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// return item
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    created,
+	})
+}
+
+func (ctrl UserController) Update(c *fiber.Ctx) error {
+	// parse id
+	id, err := util.ParseID(c.Params("ID"))
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// parse body
+	parsed := new(models.User)
+	if err := c.BodyParser(parsed); err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// perform changes
+	updated, err := userModel.Update(uint(id), parsed)
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// return item
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    updated,
+	})
+}
+
+func (ctrl UserController) Delete(c *fiber.Ctx) error {
+	// parse id
+	id, err := util.ParseID(c.Params("ID"))
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// perform deletion
+	deleted, err := userModel.Delete(id)
+	if err != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+	// return item
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": false,
+		"data":    deleted,
+	})
+}
+*/
+
+//#################################################################
+
+/*
+
 //Login ...
-func (ctrl UserController) Login(c *gin.Context) {
+func (ctrl UserController) Login(c *fiber.Ctx) {
 	var loginForm forms.LoginForm
 
 	if validationErr := c.ShouldBindJSON(&loginForm); validationErr != nil {
@@ -76,3 +189,5 @@ func (ctrl UserController) Logout(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
+
+*/

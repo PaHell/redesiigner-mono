@@ -1,17 +1,6 @@
 package controllers
 
-import (
-	"fmt"
-	"net/http"
-	"os"
-	"strconv"
-
-	"github.com/Massad/gin-boilerplate/forms"
-	"github.com/Massad/gin-boilerplate/models"
-	"github.com/gin-gonic/gin"
-	jwt "github.com/golang-jwt/jwt/v4"
-)
-
+/*
 //AuthController ...
 type AuthController struct{}
 
@@ -107,3 +96,4 @@ func (ctl AuthController) Refresh(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid authorization, please login again"})
 	}
 }
+*/

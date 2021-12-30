@@ -1,22 +1,36 @@
 package database
 
 import (
-    "context"
-    "os"
-    "fmt"
-    "time"
-    "errors"
-    "log"
- 
-    _ "go.mongodb.org/mongo-driver/bson"
-    "go.mongodb.org/mongo-driver/mongo"
-    "go.mongodb.org/mongo-driver/mongo/options"
-    "go.mongodb.org/mongo-driver/mongo/readpref"
-    "github.com/go-redis/redis"
+	"context"
+	"errors"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"github.com/go-redis/redis"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
+// orm, to interact
+var InstanceGorm *gorm.DB
+
+// database instances, differ in usage
 var instanceMongo *mongo.Client
 var instanceRedis *redis.Client
+
+func ConnectSQLite(filePath string) (err error) {
+	InstanceGorm, err = gorm.Open(sqlite.Open(filePath), &gorm.Config{})
+	if err != nil {
+		return errors.New("Failed to create SQLite database")
+	}
+	log.Println("Successfully opened sqllite database")
+	return nil
+}
 
 func ConnectMongo(envVar string) (*mongo.Client, context.Context, context.CancelFunc, *error) {
 	// get environment var
@@ -32,7 +46,7 @@ func ConnectMongo(envVar string) (*mongo.Client, context.Context, context.Cancel
 		log.Fatal(err)
 		return nil, nil, nil, &err
 	}
-	
+
 	// connection timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -58,16 +72,16 @@ func ConnectMongo(envVar string) (*mongo.Client, context.Context, context.Cancel
 func ConnectRedis(envVar string) (*redis.Client, context.Context, context.CancelFunc, *error) {
 	// get environment var
 	address := os.Getenv(envVar)
-	log.Print(address);
+	log.Print(address)
 	if len(address) == 0 {
 		err := errors.New(fmt.Sprintf("No %s defined in environment", envVar))
 		return nil, nil, nil, &err
 	}
-	
+
 	// connection timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	// create client
 	log.Println(fmt.Sprintf("Connecting to redis via: %s", address))
 	instanceRedis = redis.NewClient(&redis.Options{
@@ -95,5 +109,5 @@ func ConnectRedis(envVar string) (*redis.Client, context.Context, context.Cancel
 	if pong == "PONG" {
 		log.Print("Successfully connected to redis")
 	}
-	return instanceRedis, ctx, cancel, nil;
+	return instanceRedis, ctx, cancel, nil
 }
