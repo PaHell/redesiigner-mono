@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"github.com/PaHell/redesiigner-mono/forms"
 	"github.com/PaHell/redesiigner-mono/models"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 //UserController ...
@@ -9,39 +12,24 @@ type UserController struct{}
 
 var userModel = new(models.UserModel)
 
-/*
 func (ctrl UserController) ReadAll(c *fiber.Ctx) error {
+	// get all
 	users, err := userModel.All()
 	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"success": false,
-			"message": err.Error(),
+			"error":   err.Error(),
 		})
 	}
-	// return items
+	// return list
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
 		"data":    users,
 	})
 }
 
-func (ctrl UserController) ReadOne(c *fiber.Ctx) error {
-	// parse id
-	id, err := util.ParseID(c.Params("ID"))
-	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
-	}
-	// get item
-	user, err := userModel.One(uint(id))
-	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
-	}
+func (ctrl UserController) Read(c *fiber.Ctx) error {
+	user := c.UserContext().Value("user").(*models.User)
 	// return item
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
@@ -49,56 +37,111 @@ func (ctrl UserController) ReadOne(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl UserController) Register(c *fiber.Ctx) error {
+func (ctrl UserController) Create(c *fiber.Ctx) error {
 	// parse input
 	parsed := new(models.User)
 	if err := c.BodyParser(parsed); err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"message": err.Error(),
+			"errors":  []string{err.Error()},
 		})
 	}
-	// perform creation
-	created, err := userModel.Create(parsed)
-	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	// create
+	created, errors := userModel.Create(parsed)
+	if errors != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"message": err.Error(),
+			"errors":  errors,
 		})
 	}
-	// return item
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	// return created
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"success": true,
 		"data":    created,
 	})
 }
 
-func (ctrl UserController) Update(c *fiber.Ctx) error {
-	// parse id
-	id, err := util.ParseID(c.Params("ID"))
-	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
-	}
+func (ctrl UserController) UpdateInformation(c *fiber.Ctx) error {
+	user := c.UserContext().Value("user").(*models.User)
 	// parse body
 	parsed := new(models.User)
 	if err := c.BodyParser(parsed); err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"message": err.Error(),
+			"error":   err.Error(),
 		})
 	}
 	// perform changes
-	updated, err := userModel.Update(uint(id), parsed)
-	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	updated, errors := userModel.UpdatePublic(user.ID, parsed)
+	if errors != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"message": err.Error(),
+			"errors":  errors,
 		})
 	}
-	// return item
+	// return updated
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    updated,
+	})
+}
+
+func (ctrl UserController) UpdatePassword(c *fiber.Ctx) error {
+	user := c.UserContext().Value("user").(*models.User)
+	// parse body
+	parsed := new(forms.UserPasswordForm)
+	if err := c.BodyParser(parsed); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	// compare password
+	err := userModel.CheckPasswordHash(parsed.OldPassword, user)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	// perform changes
+	updated, errors := userModel.UpdateSecret(user.ID, &models.User{
+		Password: parsed.NewPassword,
+	})
+	if errors != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"errors":  errors,
+		})
+	}
+	// return updated
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    updated,
+	})
+}
+
+func (ctrl UserController) UpdateEmail(c *fiber.Ctx) error {
+	user := c.UserContext().Value("user").(*models.User)
+	// parse body
+	parsed := new(forms.UserEmailForm)
+	if err := c.BodyParser(parsed); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"errors":  err.Error(),
+		})
+	}
+	// perform changes
+	updated, errors := userModel.UpdateSecret(user.ID, &models.User{
+		Email: parsed.NewEmail,
+	})
+	if errors != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"errors":  errors,
+		})
+	}
+	// return updated
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
 		"data":    updated,
@@ -106,31 +149,21 @@ func (ctrl UserController) Update(c *fiber.Ctx) error {
 }
 
 func (ctrl UserController) Delete(c *fiber.Ctx) error {
-	// parse id
-	id, err := util.ParseID(c.Params("ID"))
+	user := c.UserContext().Value("user").(*models.User)
+	// delete
+	deleted, err := userModel.Delete(user.ID)
 	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"message": err.Error(),
+			"error":   err.Error(),
 		})
 	}
-	// perform deletion
-	deleted, err := userModel.Delete(id)
-	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
-	}
-	// return item
+	// return deleted
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": false,
 		"data":    deleted,
 	})
 }
-*/
-
-//#################################################################
 
 /*
 

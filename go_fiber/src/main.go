@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/PaHell/redesiigner-mono/database"
+	"github.com/PaHell/redesiigner-mono/middleware"
 	"github.com/PaHell/redesiigner-mono/models"
 	"github.com/PaHell/redesiigner-mono/routes"
 
@@ -33,11 +34,19 @@ func main() {
 
 	// MIGRATIONS
 	database.InstanceGorm.AutoMigrate(&models.User{})
+	database.InstanceGorm.AutoMigrate(&models.Token{})
 	database.InstanceGorm.AutoMigrate(&models.Application{})
 	log.Print("Database migrated")
 
+	// MIDDLEWARE
+	middleware.UseLogger(app)
+	//middleware.UseCors(app)
+	//middleware.UseCSRF(app)
+	// middleware.UseLimiter(app)
+	log.Print("Middleware configured")
+
 	// ROUTES
-	routes.SetupRoutes(app)
+	routes.Setup(app)
 	log.Print("Routes configured")
 
 	// START

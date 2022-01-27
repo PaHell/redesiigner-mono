@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"strings"
 	"time"
 
 	"github.com/PaHell/redesiigner-mono/database"
@@ -11,24 +10,14 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var errApp = map[string]string{
-	"GET_ONE":      "App with that ID does not exist",
-	"GET_ALL":      "Apps could not be resolved",
-	"URL_UNIQUE":   "App with same Url already exists",
-	"TITLE_UNIQUE": "App with same Title already exists",
-	"CREATE":       "App could not be created",
-	"UPDATE":       "App could not be updated",
-	"DELETE":       "App could not be deleted",
-}
-
 type Application struct {
 	// keys
 	ID     uint `gorm:"primaryKey" json:"id"`
 	UserID uint `gorm:"index" json:"user_id"`
 	// props
-	Title       string `json:"title" gorm:"unique" form:"title" validate:"required,omitempty,ascii,min=2,max=128"`
-	Description string `json:"description" form:"description" validate:"required,omitempty,min=32,max=512"`
-	Url         string `json:"url" gorm:"unique" form:"url" validate:"required,omitempty,url"`
+	Title       string `json:"title" gorm:"unique" form:"title" validate:"required,ascii,min=2,max=128"`
+	Description string `json:"description" form:"description" validate:"required,min=12,max=512"`
+	Url         string `json:"url" gorm:"unique" form:"url" validate:"required,url"`
 	// timestamps
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
@@ -47,28 +36,33 @@ func (m ApplicationModel) One(ID uint) (application *Application, err error) {
 }
 
 func (m ApplicationModel) All() (list []Application, err error) {
-	err = database.InstanceGorm.Order("id desc, user_id").Find(&list).Error
+	err = database.InstanceGorm.Order("title asc, url asc").Find(&list).Error
 	if err != nil {
 		return list, errors.New(util.RESPONSE_MSG_CANNOT_GET)
 	}
 	return list, nil
 }
 
-func (m ApplicationModel) Create(form *Application) (application *Application, err error) {
+func (m ApplicationModel) Create(form *Application) (application *Application, errors []string) {
 	// validate
 	v := validator.New()
-	err = v.Struct(form)
+	var err error
+	err = v.StructPartial(form, "Title", "Url", "Description")
 	if err != nil {
-		return nil, errors.New(util.ValidationErrorsToString(err))
+		errors = append(errors, err.Error())
 	}
 	// check unique
 	err = database.InstanceGorm.First(&Application{}, "Url = ?", form.Url).Error
 	if err == nil {
-		return nil, errors.New("Property url needs to be unique")
+		errors = append(errors, "Url needs to be unique")
 	}
 	err = database.InstanceGorm.First(&Application{}, "Title = ?", form.Title).Error
 	if err == nil {
-		return nil, errors.New("Property title needs to be unique")
+		errors = append(errors, "Title needs to be unique")
+	}
+	// return collected errors
+	if len(errors) != 0 {
+		return nil, errors
 	}
 	// create
 	newItem := &Application{
@@ -77,54 +71,55 @@ func (m ApplicationModel) Create(form *Application) (application *Application, e
 		Url:         form.Url,
 	}
 	err = database.InstanceGorm.Create(&newItem).Error
-	if err == nil {
-		return nil, errors.New(util.RESPONSE_MSG_CANNOT_CREATE)
+	if err != nil {
+		errors = append(errors, err.Error())
+		return nil, errors
 	}
 	return newItem, nil
 }
 
-func (m ApplicationModel) Update(ID uint, form *Application) (item *Application, err error) {
+func (m ApplicationModel) Update(ID uint, form *Application) (item *Application, errors []string) {
 	// get item
-	err = database.InstanceGorm.First(&item, "ID = ?", ID).Error
+	err := database.InstanceGorm.First(&item, "ID = ?", ID).Error
 	if err != nil {
-		return nil, errors.New(util.RESPONSE_MSG_DOES_NOT_EXIST)
+		errors = append(errors, err.Error())
+		return nil, errors
 	}
 	// update props
 	v := validator.New()
-	var propErrors []string
-	if len(form.Title) != 0 {
+	if form.Title != "" {
 		err = v.StructPartial(form, "Title")
 		if err != nil {
-			propErrors = append(propErrors, util.ValidationErrorsToString(err))
+			errors = append(errors, err.Error())
 		}
 		item.Title = form.Title
 	}
-	if len(form.Description) != 0 {
+	if form.Description != "" {
 		err = v.StructPartial(form, "Description")
 		if err != nil {
-			propErrors = append(propErrors, util.ValidationErrorsToString(err))
+			errors = append(errors, err.Error())
 		}
 		item.Description = form.Description
 	}
-	if len(form.Url) != 0 {
+	if form.Url != "" {
 		err = v.StructPartial(form, "Url")
 		if err != nil {
-			propErrors = append(propErrors, util.ValidationErrorsToString(err))
+			errors = append(errors, err.Error())
 		}
 		item.Url = form.Url
 	}
-	if err != nil {
-		return nil, errors.New(strings.Join(propErrors, ", "))
+	if len(errors) != 0 {
+		return nil, errors
 	}
 	// save and return updated
 	err = database.InstanceGorm.Save(&item).Error
 	if err != nil {
-		return nil, errors.New(util.RESPONSE_MSG_CANNOT_UPDATE)
+		errors = append(errors, err.Error())
+		return nil, errors
 	}
 	return item, nil
 }
 
-//Delete ...
 func (m ApplicationModel) Delete(ID uint) (deleted *Application, err error) {
 	err = database.InstanceGorm.First(&deleted, "ID = ?", ID).Error
 	if err != nil {

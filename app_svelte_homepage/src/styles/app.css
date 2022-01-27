@@ -1,0 +1,13 @@
+@import 'remixicon/fonts/remixicon.css';
+@import 'animate.css';
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@100;400;700&family=IBM+Plex+Serif&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#svelte {
+    @apply w-full h-full bg-gray-100 dark:bg-gray-800;
+}
