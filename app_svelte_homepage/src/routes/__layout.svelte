@@ -8,13 +8,13 @@
 </script>
 
 <template>
-	<BannerStore/>
-	<ModalStore/>
-	<SoundStore/>
-	<NotificationStore/>
+	<BannerStore />
+	<ModalStore />
+	<SoundStore />
+	<NotificationStore />
 	<div id="page">
-		<Header/>
-		<slot/>
+		<Header />
+		<slot />
 	</div>
 </template>
 

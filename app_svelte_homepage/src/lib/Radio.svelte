@@ -1,10 +1,9 @@
 <script lang="ts" context="module">
 	import Icon from '$lib/Icon.svelte';
 </script>
+
 <script lang="ts">
-	export let options = [
-		{}
-	];
+	export let options = [{}];
 	export let selected;
 	export let opened = false;
 </script>
@@ -12,13 +11,13 @@
 <template>
 	<div class="app-select">
 		<button>
-			<Icon name="home"/>
-			<p>{ selected }</p>
+			<Icon name="home" />
+			<p>{selected}</p>
 		</button>
 		<menu>
 			{#each options as option}
 				<button>
-					<p>{ option }</p>
+					<p>{option}</p>
 				</button>
 			{/each}
 		</menu>

@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-auto';
 import sveltePreprocess from 'svelte-preprocess';
-import tailwindCss from 'tailwindcss'; 
+import tailwindCss from 'tailwindcss';
 import postCssNesting from 'postcss-nesting';
 import autoprefixer from 'autoprefixer';
 
@@ -13,12 +13,8 @@ const config = {
 	preprocess: sveltePreprocess({
 		sourceMap: !production,
 		postcss: {
-			plugins: [
-				postCssNesting,
-				tailwindCss,
-				autoprefixer
-			],
-		},
+			plugins: [postCssNesting, tailwindCss, autoprefixer]
+		}
 	}),
 
 	kit: {
