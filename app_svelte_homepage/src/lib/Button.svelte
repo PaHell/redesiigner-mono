@@ -109,7 +109,7 @@
 		& > main {
 			@apply flex transition-opacity;
 			& > p {
-				@apply mb-[1.25px] font-medium;
+				@apply mt-[-1.25px] font-medium;
 				&:not(:first-child) {
 					@apply ml-1;
 				}

@@ -29,11 +29,14 @@
 			</nav>
 			<aside>
 				<Btn icon="notification" bg="transparent" />
-				<Btn color="transparent">
-					<img
-						class="h-8 w-8 rounded-full"
-						src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-						alt=""/>
+				<Btn bg="transparent" text="XYZ">
+					<div class="h-[18px] mr-1 flex items-center">
+						<img
+							class="h-[32px] w-[32px] rounded-full"
+							src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+							alt=""/>
+					</div>
+					<p class="opacity-50">Hello, </p>
 				</Btn>
 			</aside>
 		</div>
