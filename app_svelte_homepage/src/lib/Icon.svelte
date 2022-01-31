@@ -2,6 +2,8 @@
 	const alias = {
 		loading: 'loader-4',
 		home: 'home-gear',
+		menu: 'menu-2',
+		notification: 'notification',
 		device: 'computer',
 		add: 'add',
 		check: 'check',
@@ -24,7 +26,8 @@
 	<div
 		class="app-icon bg-[] text-[]-[] {css}"
 		class:app-icon-large={large}
-		class:app-icon-circle={circle}>
+		class:app-icon-circle={circle}
+	>
 		<i class="ri-{alias[name]}-line" />
 	</div>
 </template>

@@ -9,23 +9,14 @@
 html,
 body,
 #svelte {
-	@apply w-full h-full bg-gray-100 dark:bg-gray-800;
-}
-
-.app-loading {
-	@apply absolute w-[18px] h-[18px] rounded-full flex justify-center items-center;
-	@apply border-2 border-white border-opacity-20 !important;
-
-	&:after {
-		content: "";
-		animation: rotate 1s infinite linear;
-		@apply w-[18px] h-[18px]
-		border-2 border-white rounded-full
-		block absolute border-r-transparent;
-	}
+	@apply w-full h-full bg-gray-100 dark:bg-gray-900;
 }
 
 @keyframes rotate {
-	from { transform: rotate(0deg); }
-	to { transform: rotate(360deg); }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }

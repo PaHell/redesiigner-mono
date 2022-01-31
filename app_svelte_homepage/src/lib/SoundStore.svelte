@@ -42,12 +42,14 @@
 					//audioMap[sound].currentTime = 0;
 				}
 			});
-			audioMap[sound].load();
+			// TODO: Enable back
+			//audioMap[sound].load();
 		});
 	});
 
 	const unsub = soundStore.subscribe((value) => {
-		audioMap?.[value]?.play();
+		// TODO: Enable back
+		//audioMap?.[value]?.play();
 		return;
 		const elem: HTMLAudioElement = audioMap[value];
 		if (elem != null && value.length) {

@@ -33,7 +33,8 @@
 				{
 					icon: 'cross',
 					text: 'Primary',
-					color,
+					bg: color,
+					color: 'white',
 					OnClick: (close) => {
 						close();
 					}
@@ -53,7 +54,8 @@
 				{
 					icon: 'cross',
 					text: 'Primary',
-					color: `transparent-${color}`,
+					color,
+					bg: 'transparent',
 					OnClick: () => {}
 				}
 			]
@@ -69,7 +71,8 @@
 				{
 					icon: 'cross',
 					text: 'Primary',
-					color: 'white', //`white-${color}`,
+					color,
+					bg: 'white',
 					OnClick: () => {}
 				}
 			]

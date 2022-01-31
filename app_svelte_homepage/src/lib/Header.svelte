@@ -1,7 +1,43 @@
+<script context="module" lang="ts">
+	import Btn from '$lib/Button.svelte';
+</script>
+
 <script lang="ts">
+	import Navigation from './Navigation.svelte';
 </script>
 
 <template>
+	<header class="app-header">
+		<div class="app-header-wrapper">
+			<aside>
+				<Btn icon="menu" bg="transparent" css="mr-3" />
+				<div class="app-branding">
+					<img
+						class="block sm:hidden h-auto w-10"
+						src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+						alt="Workflow"
+					/>
+					<img
+						class="hidden sm:block h-8 w-auto"
+						src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
+						alt="Workflow"
+					/>
+				</div>
+			</aside>
+			<nav>
+				<Navigation />
+			</nav>
+			<aside>
+				<Btn icon="notification" bg="transparent" />
+				<Btn color="transparent">
+					<img
+						class="h-8 w-8 rounded-full"
+						src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+						alt=""/>
+				</Btn>
+			</aside>
+		</div>
+	</header>
 	<nav class="bg-gray-800">
 		<div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 			<div class="relative flex items-center justify-between h-16">
@@ -224,5 +260,42 @@
 	</nav>
 </template>
 
-<style lang="postcss">
+<style global lang="postcss">
+	.app-header {
+		@apply flex justify-center 
+		bg-gray-800;
+
+		& > .app-header-wrapper {
+			@apply w-full flex p-4
+			lg:max-w-7xl;
+
+			& > aside {
+				@apply flex
+				flex-1 md:flex-initial lg:flex-1;
+
+				&:first-child {
+					@apply justify-between sm:justify-start;
+					& > .app-button {
+						@apply md:hidden;
+					}
+				}
+
+				&:last-child {
+					@apply justify-end;
+				}
+
+
+				& > .app-branding {
+					@apply flex items-center
+					-mr-5 sm:mr-0;
+				}
+			}
+
+			& > nav {
+				@apply hidden
+				md:block md:flex-1
+				md:ml-4 lg:ml-0 lg:flex-initial;
+			}
+		}
+	}
 </style>

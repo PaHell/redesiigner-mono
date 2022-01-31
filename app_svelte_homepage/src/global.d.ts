@@ -4,6 +4,7 @@ type TButton<TIn, TOut> = {
 	icon?: string | undefined;
 	text?: string | undefined;
 	color?: string | undefined;
+	bg?: string | undefined;
 	OnClick: (TIn) => TOut;
 };
 
