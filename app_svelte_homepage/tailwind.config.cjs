@@ -1,8 +1,8 @@
 module.exports = {
 	content: [
-		'./src/lib/**/*.svelte',
-		'./src/routes/**/*.svelte',
-		'./src/styles/**/*.css',
+		//'./src/lib/**/*.svelte',
+		//'./src/routes/**/*.svelte',
+		//'./src/styles/**/*.css',
 		'./src/**/*.{html,js,svelte,ts}'
 	],
 	presets: [],

@@ -14,13 +14,16 @@
 </script>
 
 <script lang="ts">
-	/*
+/*
 bg-accent-500 dark:bg-accent-600
 bg-success-500 dark:bg-success-600
 bg-warning-500 dark:bg-warning-600
 bg-danger-500 dark:bg-danger-600
 bg-info-500 dark:bg-info-600
 */
+
+import Select from "$lib/Select.svelte";
+
 </script>
 
 <template>
@@ -32,17 +35,23 @@ bg-info-500 dark:bg-info-600
 			{/each}
 		</tr>
 		{#each colors as color}
-			<tr>
-				<td style="padding: 1rem;">{color}</td>
-				{#each backgrounds as bg}
-					<td
-						style="padding: 1rem;"
-						class={bg === 'white' ? `bg-${color}-500 dark:bg-${color}-600` : ''}
-					>
-						<Btn icon="cross" text="Button" {color} {bg} />
-					</td>
-				{/each}
-			</tr>
+		<tr>
+			<td style="padding: 1rem;">{color}</td>
+			{#each backgrounds as bg}
+				<td
+					style="padding: 1rem;"
+					class={bg === 'white' ? `bg-${color}-500 dark:bg-${color}-600` : ''}
+				>
+					<Btn icon="cross" text="Button" {color} {bg} />
+				</td>
+			{/each}
+		</tr>
 		{/each}
+		<tr>
+			<td>Select</td>
+			<td>
+				<Select/>
+			</td>
+		</tr>
 	</table>
 </template>

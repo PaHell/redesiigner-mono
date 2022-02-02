@@ -3,6 +3,8 @@
 		loading: 'loader-4',
 		home: 'home-gear',
 		menu: 'menu-2',
+		select: 'arrow-down-s',
+		language: 'global',
 		notification: 'notification',
 		device: 'computer',
 		add: 'add',

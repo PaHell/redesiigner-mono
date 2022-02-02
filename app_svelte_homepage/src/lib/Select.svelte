@@ -1,7 +1,35 @@
+<script lang="ts" context="module">
+	import Btn from "./Button.svelte";
+	import Icon from "./Icon.svelte";	
+</script>
+
 <script lang="ts">
+	export let icon = "language";
 </script>
 
 <template>
+	<div class="app-select-wrapper">
+		<div class="app-select">
+			<div class="app-select-selected">
+				<Btn>
+					<Icon name={icon} css="opacity-60 mr-1"/>
+					<p>Selected</p>
+					<p class="flex-1 opacity-60 text-left">Selected</p>
+					<Icon name="select" css="opacity-60"/>
+				</Btn>
+				<Btn icon="cross"/>
+			</div>
+			<div class="app-select-menu">
+				<div>
+					<Btn bg="transparent">
+						<p>Selected</p>
+						<p class="flex-1 opacity-60 text-left">Selected</p>
+						<Icon name="check"/>
+					</Btn>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- This example requires Tailwind CSS v2.0+ -->
 	<div class="relative inline-block text-left">
 		<div>
@@ -86,5 +114,48 @@
 	</div>
 </template>
 
-<style lang="postcss">
+<style global lang="postcss">
+	.app-select-wrapper {
+		@apply fixed inset-0
+		w-screen h-screen p-4
+		flex flex-col
+		bg-gray-800;
+		
+		& > .app-select {
+			@apply
+			w-full h-full 
+			bg-gray-800 rounded-xl
+			border-gray-700 border-2
+			ring-gray-900 ring-2;
+	
+			& > .app-select-selected {
+				@apply flex m-[-2px] mb-0;
+
+				& > .app-button {
+					@apply justify-center;
+					&:first-child {
+						@apply flex-1 rounded-tl-xl;
+					}
+					&:last-child {
+						@apply rounded-tr-xl;
+					}
+				}
+			}
+			& > .app-select-menu {
+				@apply flex-1 mx-[-2px];
+
+				& > div {
+
+					& > .app-button {
+						@apply w-full;
+					}
+				}
+			}
+
+			& .app-button {
+				@apply rounded-none;
+				box-shadow: none !important;
+			}
+		}
+	}
 </style>
