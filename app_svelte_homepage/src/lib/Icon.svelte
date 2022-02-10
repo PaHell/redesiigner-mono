@@ -26,7 +26,7 @@
 
 <template>
 	<div
-		class="app-icon bg-[] text-[]-[] {css}"
+		class="app-icon {css}"
 		class:app-icon-large={large}
 		class:app-icon-circle={circle}
 	>
@@ -37,8 +37,7 @@
 <style global lang="postcss">
 	.app-icon {
 		@apply flex justify-center items-center
-    text-ic-base sm:text-ic-sm;
-		line-height: 1 !important;
+    		text-ic-base;
 
 		&.app-icon-large {
 			@apply text-ic-lg sm:text-ic-base;

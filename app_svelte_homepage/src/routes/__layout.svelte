@@ -12,18 +12,11 @@
 	<ModalStore />
 	<SoundStore />
 	<NotificationStore />
-	<div id="page">
-		<Header />
-		<slot />
-	</div>
+	<Header />
+	<slot />
 </template>
 
 <style global lang="postcss">
 	#svelte {
-		@apply flex flex-col;
-
-		& > #page {
-			@apply flex-1 overflow-y-scroll overflow-x-hidden;
-		}
 	}
 </style>

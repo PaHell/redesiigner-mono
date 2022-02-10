@@ -30,8 +30,8 @@
 <style global lang="postcss">
 	.app-banner-store {
 		@apply w-full h-auto overflow-visible
-        flex flex-col-reverse
-        transition-all;
+		flex flex-col-reverse
+		transition-all;
 
 		& > .app-banner {
 			/**/

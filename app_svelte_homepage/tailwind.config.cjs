@@ -46,8 +46,8 @@ module.exports = {
 			accent: colors.blue,
 			danger: colors.red,
 			warning: colors.amber,
-			success: colors.teal,
-			info: colors.fuchsia
+			success: colors.emerald,
+			info: colors.violet
 		}),
 		columns: {
 			auto: 'auto',
@@ -392,9 +392,9 @@ module.exports = {
 			]
 		},
 		fontSize: {
-			'ic-sm': ['18px', { lineHeight: '1rem' }],
-			'ic-base': ['22px', { lineHeight: '1rem' }],
-			'ic-lg': ['32px', { lineHeight: '1rem' }],
+			'ic-sm': ['18px', { lineHeight: '18px' }],
+			'ic-base': ['22px', { lineHeight: '22px' }],
+			'ic-lg': ['32px', { lineHeight: '32px' }],
 			xs: ['0.75rem', { lineHeight: '1rem' }],
 			sm: ['0.875rem', { lineHeight: '1.25rem' }],
 			base: ['1rem', { lineHeight: '1.5rem' }],
@@ -608,7 +608,9 @@ module.exports = {
 			widest: '0.1em'
 		},
 		lineHeight: {
-			icon: '22px',
+			'ic-sm': '18px',
+			'ic-base': '22px',
+			'ic-lg': '22px',
 			none: '1',
 			tight: '1.25',
 			snug: '1.375',

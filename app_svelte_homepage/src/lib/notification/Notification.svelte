@@ -125,7 +125,7 @@
 				@apply mr-4;
 
 				& + div > h6 {
-					@apply leading-icon sm:leading-icon;
+					@apply leading-ic-base;
 				}
 			}
 

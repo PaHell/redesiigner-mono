@@ -1,161 +1,110 @@
-<script lang="ts" context="module">
-	import Btn from "./Button.svelte";
-	import Icon from "./Icon.svelte";	
+<script context="module" lang="ts">
+	import Btn from '$lib/Button.svelte';
+import { createEventDispatcher } from 'svelte';
+	import { menuStore } from '../store';
+	import Icon from "./Icon.svelte";
 </script>
 
 <script lang="ts">
-	export let icon = "language";
+	export let options : string[] = [];
+	export let selected = 0;
+	export let opened = false;
+
+	let ref : HTMLElement | undefined;
+
+	const dispatch = createEventDispatcher();
+
+	function toggleOpen() : void {
+		opened = !opened;
+		if (opened) {
+			dispatch("open");
+			menuStore.open(() => { opened = false });
+		} else {
+			dispatch("close");
+			menuStore.open(() => { });
+		}
+	}
 </script>
 
 <template>
-	<div class="app-select-wrapper">
-		<div class="app-select">
-			<div class="app-select-selected">
-				<Btn>
-					<Icon name={icon} css="opacity-60 mr-1"/>
-					<p>Selected</p>
-					<p class="flex-1 opacity-60 text-left">Selected</p>
-					<Icon name="select" css="opacity-60"/>
-				</Btn>
-				<Btn icon="cross"/>
-			</div>
-			<div class="app-select-menu">
+	<div class="app-select">
+		<Btn active={opened} on:click={toggleOpen} disableLoading>
+			<Icon name="home"/>
+			<slot name="active" item={options[selected]}/>
+			<Icon name="select"/>
+		</Btn>
+		<menu bind:this={ref}
+			class="app-select-menu"
+			class:open={opened}>
+			<div>
 				<div>
-					<Btn bg="transparent">
-						<p>Selected</p>
-						<p class="flex-1 opacity-60 text-left">Selected</p>
-						<Icon name="check"/>
-					</Btn>
+					{#each options as option, index}
+						<Btn disableLoading
+							active={selected === index}
+							bg="transparent"
+							on:click={() => { selected = index; toggleOpen(); }}>
+							<slot name="item"
+								item={option}
+								active={index == selected}/>
+						</Btn>
+					{/each}
 				</div>
 			</div>
-		</div>
-	</div>
-	<!-- This example requires Tailwind CSS v2.0+ -->
-	<div class="relative inline-block text-left">
-		<div>
-			<button
-				type="button"
-				class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-				id="menu-button"
-				aria-expanded="true"
-				aria-haspopup="true"
-			>
-				Options
-				<!-- Heroicon name: solid/chevron-down -->
-				<svg
-					class="-mr-1 ml-2 h-5 w-5"
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-			</button>
-		</div>
-
-		<!--
-      Dropdown menu, show/hide based on menu state.
-  
-      Entering: "transition ease-out duration-100"
-        From: "transform opacity-0 scale-95"
-        To: "transform opacity-100 scale-100"
-      Leaving: "transition ease-in duration-75"
-        From: "transform opacity-100 scale-100"
-        To: "transform opacity-0 scale-95"
-    -->
-		<div
-			class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-			role="menu"
-			aria-orientation="vertical"
-			aria-labelledby="menu-button"
-			tabindex="-1"
-		>
-			<div class="py-1" role="none">
-				<!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-				<a
-					href="#"
-					class="text-gray-700 block px-4 py-2 text-sm"
-					role="menuitem"
-					tabindex="-1"
-					id="menu-item-0">Account settings</a
-				>
-				<a
-					href="#"
-					class="text-gray-700 block px-4 py-2 text-sm"
-					role="menuitem"
-					tabindex="-1"
-					id="menu-item-1">Support</a
-				>
-				<a
-					href="#"
-					class="text-gray-700 block px-4 py-2 text-sm"
-					role="menuitem"
-					tabindex="-1"
-					id="menu-item-2">License</a
-				>
-				<form method="POST" action="#" role="none">
-					<button
-						type="submit"
-						class="text-gray-700 block w-full text-left px-4 py-2 text-sm"
-						role="menuitem"
-						tabindex="-1"
-						id="menu-item-3"
-					>
-						Sign out
-					</button>
-				</form>
-			</div>
-		</div>
+		</menu>
 	</div>
 </template>
 
 <style global lang="postcss">
-	.app-select-wrapper {
-		@apply fixed inset-0
-		w-screen h-screen p-4
-		flex flex-col
-		bg-gray-800;
+	.app-select {
+		@apply flex flex-col justify-start;
+	}
+
+	.app-select-menu {
+		@apply w-full h-0
+		mt-[-5px]
+		overflow-visible;
+		margin-top: calc(-8px - 1px);
 		
-		& > .app-select {
-			@apply
-			w-full h-full 
-			bg-gray-800 rounded-xl
-			border-gray-700 border-2
-			ring-gray-900 ring-2;
+		& > div {
+			@apply flex max-h-0 overflow-hidden;
+			width: calc(100% + 2 * 8px);
+			margin-left: -8px;
+			transition: max-height .25s;
+			will-change: max-height height;
+
+			& > div {
+				@apply relative overflow-hidden
+				flex flex-col justify-center
+				py-2 border border-gray-300
+				bg-gray-50 shadow rounded-md;
+				width: calc(100% - 2 * 8px);
+				margin: 8px;
+
+				& .app-button {
+					@apply items-stretch flex-shrink-0
+					border-x-0 rounded-none
+					transition-colors;
+
+					& main {
+						@apply justify-start;
+					}
+					
+					&.app-button-active {
+						&:before {
+							content: "";
+							@apply block absolute h-5 w-[2px]
+							bg-accent-500 rounded-full;
+						}
 	
-			& > .app-select-selected {
-				@apply flex m-[-2px] mb-0;
-
-				& > .app-button {
-					@apply justify-center;
-					&:first-child {
-						@apply flex-1 rounded-tl-xl;
-					}
-					&:last-child {
-						@apply rounded-tr-xl;
-					}
-				}
-			}
-			& > .app-select-menu {
-				@apply flex-1 mx-[-2px];
-
-				& > div {
-
-					& > .app-button {
-						@apply w-full;
+						&:after { @apply hidden; }
 					}
 				}
 			}
 
-			& .app-button {
-				@apply rounded-none;
-				box-shadow: none !important;
-			}
+		}
+		&.open > div {
+			@apply max-h-96;
 		}
 	}
+
 </style>

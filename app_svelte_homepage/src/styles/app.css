@@ -9,7 +9,60 @@
 html,
 body,
 #svelte {
-	@apply w-full h-full bg-gray-100 dark:bg-gray-900;
+	@apply bg-gray-100 dark:bg-gray-900;
+}
+
+body {
+	@apply w-screen min-h-screen
+	overflow-x-clip overflow-y-scroll;
+}
+
+.disable-transitions * {
+	@apply transition-none duration-1000 !important;
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+	scrollbar-width: thick;
+	scrollbar-color: #d1d5db #f3f4f6;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+	width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+	@apply bg-gray-300
+	border-[7px] border-gray-100 border-solid;
+}
+
+*::-webkit-scrollbar-thumb {
+	@apply bg-gray-500 rounded-full
+	border-[7px] border-gray-100 border-solid;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	body {
+		padding-right: 16px;
+	}
+}
+
+
+html.dark,
+html.dark * {
+	scrollbar-color: #374151 #111827;
+}
+
+html.dark {
+	& *::-webkit-scrollbar-track {
+		@apply bg-gray-800 border-gray-900;
+	}
+
+	& *::-webkit-scrollbar-thumb {
+		@apply bg-gray-600 border-gray-900;
+	}
 }
 
 @keyframes rotate {

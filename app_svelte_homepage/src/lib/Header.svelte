@@ -1,9 +1,11 @@
 <script context="module" lang="ts">
 	import Btn from '$lib/Button.svelte';
+	import Navigation from './Navigation.svelte';
 </script>
 
 <script lang="ts">
-	import Navigation from './Navigation.svelte';
+	const navItems = ["Dashboard", "Team", "Projects", "Calendar"];
+	let navActive = 0;
 </script>
 
 <template>
@@ -25,23 +27,26 @@
 				</div>
 			</aside>
 			<nav>
-				<Navigation />
+				<Navigation items={navItems} bind:active={navActive} />
 			</nav>
 			<aside>
 				<Btn icon="notification" bg="transparent" />
-				<Btn bg="transparent" text="XYZ">
-					<div class="h-[18px] mr-1 flex items-center">
+				<Btn bg="transparent">
+					<div class="h-[22px] md:h-[18px] mr-1 flex items-center">
 						<img
 							class="h-[32px] w-[32px] rounded-full"
 							src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
 							alt=""/>
 					</div>
-					<p class="opacity-50">Hello, </p>
+					<p>
+						<span class="text-gray-500">Hello, </span>
+						<span class="text-white">XYZ</span>
+					</p>
 				</Btn>
 			</aside>
 		</div>
 	</header>
-	<nav class="bg-gray-800">
+	<nav class="bg-gray-800 hidden">
 		<div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 			<div class="relative flex items-center justify-between h-16">
 				<div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -265,8 +270,9 @@
 
 <style global lang="postcss">
 	.app-header {
-		@apply flex justify-center 
+		@apply flex justify-center
 		bg-gray-800;
+		box-shadow: 32px 0 0 rgb(31,41,55);
 
 		& > .app-header-wrapper {
 			@apply w-full flex p-4
@@ -289,7 +295,7 @@
 
 
 				& > .app-branding {
-					@apply flex items-center
+					@apply flex items-center flex-shrink-0
 					-mr-5 sm:mr-0;
 				}
 			}
