@@ -6,8 +6,8 @@
 
 <script lang="ts">
 	const languages = ["Deutsch", "English", "Francais", "Espanol"];
-	const themes = ["OS Pref", "Light", "Dark"];
 	let selectedLang = 0;
+	const themes = ["OS Pref", "Light", "Dark"];
 	let selectedTheme = 0;
 </script>
 
@@ -35,19 +35,15 @@
 					<p class:active>{item}</p>
 				</svelte:fragment>
 			</Slct>
-
-                  <div class="dark">
-				<Slct options={themes}
-					bind:selected={selectedTheme}>
-					<svelte:fragment slot="active" let:item>
-						<p>{item}</p>
-					</svelte:fragment>
-					<svelte:fragment slot="item" let:item let:active>
-						<p class:active>{item}</p>
-					</svelte:fragment>
-				</Slct>
-		      </div>
-
+			<Slct options={themes}
+				bind:selected={selectedTheme}>
+				<svelte:fragment slot="active" let:item>
+					<p>{item}</p>
+				</svelte:fragment>
+				<svelte:fragment slot="item" let:item let:active>
+					<p class:active>{item}</p>
+				</svelte:fragment>
+			</Slct>
 		</div>
 	</div>
 </template>

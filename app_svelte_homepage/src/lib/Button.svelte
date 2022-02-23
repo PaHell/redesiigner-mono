@@ -39,15 +39,14 @@
 		disabled={disabled||loading}
 		style="outline: none;"
 		class={`
-            ${css ?? ''}
-            app-button
-            ${disabled ? 'app-button-disabled' : ''}
-            ${loading ? 'app-button-loading' : ''}
-            ${active ? 'app-button-active' : ''}
-            app-button-bg-${bg ?? 'default'}
-            app-button-color-${color ?? 'default'}
-        `}
-	>
+			${css ?? ''}
+			app-button
+			${disabled ? 'app-button-disabled' : ''}
+			${loading ? 'app-button-loading' : ''}
+			${active ? 'app-button-active' : ''}
+			app-button-bg-${bg ?? 'default'}
+			app-button-color-${color ?? 'default'}
+        	`}>
 		{#if loading}
 			<div class="animate__animated animate__bounceIn">
 				<LoadingSpinner />
@@ -76,7 +75,7 @@
 			@apply sm:justify-start;
 		}
 
-		& .app-button {
+		& > .app-button {
 			&:not(:last-child) {
 				@apply
 				mt-2 sm:mt-0
@@ -90,9 +89,9 @@
 	}
 
 	.app-button {
-		@apply flex flex-col items-center  justify-center flex-shrink-0
-        	p-2 border rounded-md font-medium
-        	transition-all select-none;
+		@apply flex flex-col items-center justify-center flex-shrink-0
+        	h-10 sm:h-9 px-2 border rounded-md font-medium
+        	transition-colors select-none;
 
 		&.app-button-no-ring {
 			@apply ring-0 ring-offset-0 !important;
@@ -112,14 +111,16 @@
 
 		& > main {
 			@apply flex items-center justify-center
-			transition-opacity;
+			transition-opacity border-inherit;
+			& * {
+				@apply border-inherit transition-colors;
+			}
 			& > .app-icon {
 				@apply md:text-ic-sm;
 				&:first-child:not(:last-child) { @apply ml-2; }
 			}
 			& > p {
-				@apply px-2 font-medium
-				relative top-[-.5px]
+				@apply px-2 mb-[.5px] font-medium
 				text-base md:text-sm
 				leading-ic-base md:leading-ic-sm;
 
@@ -146,6 +147,7 @@
 			}
 			&.app-button-bg-white {
 				box-shadow: none !important;
+				& * { @apply text-inherit !important; }
 				&.app-button-color-accent {
 					@apply bg-accent-400 text-accent-700 !important;
 				}
@@ -166,6 +168,13 @@
 
 		/* TEXT COLORS */
 
+		&.app-button-bg-white,
+		&.app-button-bg-default,
+		&.app-button-bg-transparent {
+			& p:not(:first-child) {
+				@apply text-gray-900;
+			}
+		}
 		&.app-button-color-accent {
 			@apply text-accent-600;
 			&:hover,
@@ -268,6 +277,8 @@
 
 		&.app-button-bg-white {
 			@apply shadow-md;
+
+			& > main { @apply border-gray-300; }
 			&:hover {
 				@apply shadow-lg;
 			}
@@ -361,12 +372,6 @@
 					w-2/3 h-[2px] mt-[4px] mb-[-6px]
 					bg-accent-500 rounded-full;
 				}
-				&.app-button-color-default {
-					& p,
-					& .app-icon {	
-						@apply text-accent-600;
-					}
-				}
 				&.app-button-color-success:after { @apply bg-success-500; }
 				&.app-button-color-warning:after { @apply bg-warning-400; }
 				&.app-button-color-danger:after { @apply bg-danger-500; }
@@ -426,7 +431,8 @@
 		& .app-button {
 
 			&:not(.app-button-bg-white) {
-				@apply border-2 shadow-none !important;
+				@apply border-2;
+				@apply shadow-none !important;
 			}
 
 			/* DISABLED */
@@ -444,6 +450,13 @@
 			}
 
 			/* TEXT COLORS */
+
+			&.app-button-bg-default,
+			&.app-button-bg-transparent {
+				& p:not(:first-child) {
+					@apply text-white;
+				}
+			}
 
 			&.app-button-color-accent {
 				@apply text-accent-500;
@@ -561,7 +574,6 @@
 				&:hover { @apply bg-gray-800 border-gray-700; }
 				&:focus,
 				&:active { @apply bg-gray-700 border-gray-700; }
-
 			}
 
 			/* BG COLORS */
@@ -573,12 +585,6 @@
 				&.app-button-bg-transparent {
 					&:after {
 						@apply bg-accent-500;
-					}
-					&.app-button-color-default {
-						& p,
-						& .app-icon {	
-							@apply text-accent-500;
-						}
 					}
 					&.app-button-color-success:after { @apply bg-success-500; }
 					&.app-button-color-warning:after { @apply bg-warning-400; }

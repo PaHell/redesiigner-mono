@@ -271,7 +271,7 @@
 <style global lang="postcss">
 	.app-header {
 		@apply flex justify-center
-		bg-gray-800;
+		bg-gray-900;
 		box-shadow: 32px 0 0 rgb(31,41,55);
 
 		& > .app-header-wrapper {

@@ -1,5 +1,10 @@
 /// <reference types="@sveltejs/kit" />
 
+type TValidation = {
+	regex: RegExp;
+	message: string;
+}
+
 type TButton<TIn, TOut> = {
 	icon?: string | undefined;
 	text?: string | undefined;

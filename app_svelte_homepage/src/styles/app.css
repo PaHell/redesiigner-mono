@@ -14,7 +14,8 @@ body,
 
 body {
 	@apply w-screen min-h-screen
-	overflow-x-clip overflow-y-scroll;
+	overflow-x-clip overflow-y-scroll
+	text-gray-900 dark:text-white;
 }
 
 .disable-transitions * {

@@ -4,6 +4,7 @@
 		home: 'home-gear',
 		menu: 'menu-2',
 		select: 'arrow-down-s',
+		error: 'error-warning',
 		language: 'global',
 		notification: 'notification',
 		device: 'computer',
