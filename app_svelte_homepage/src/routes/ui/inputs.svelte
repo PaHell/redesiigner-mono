@@ -55,12 +55,12 @@
                   </div>
 		</div>
             <div class="flex flex-col justify-center space-y-2">
-                  <Alert text="Error" icon="error" color="default"/>
-                  <Alert text="Error" icon="error" color="accent"/>
-                  <Alert text="Error" icon="error" color="success"/>
-                  <Alert text="Error" icon="error" color="warning"/>
-                  <Alert text="Error" icon="error" color="danger"/>
-                  <Alert text="Error" icon="error" color="info"/>
+                  <Alert text="Error" message="An error occured processing your request." icon="error" color="default"/>
+                  <Alert text="Error" message="An error occured processing your request." icon="error" color="accent"/>
+                  <Alert text="Error" message="An error occured processing your request." icon="error" color="success"/>
+                  <Alert text="Error" message="An error occured processing your request." icon="error" color="warning"/>
+                  <Alert text="Error" message="An error occured processing your request." icon="error" color="danger"/>
+                  <Alert text="Error" message="An error occured processing your request." icon="error" color="info"/>
             </div>
 	</div>
 </template>

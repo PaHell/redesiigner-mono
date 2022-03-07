@@ -56,7 +56,7 @@
                         </div>
                   </div>
                   {#each errorMessages as msg}
-                        <Alert text={msg} icon="danger"/>
+                        <Alert text={msg} message={msg} icon="danger"/>
                   {/each}
             </div>
 	</div>
